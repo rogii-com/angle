@@ -72,6 +72,6 @@ FOR  %%D IN (release debug) DO (
         ) >> out\%%D\args.gn
     )
 
-    bin\gn gen out\%%D
+    gn gen out\%%D
     ninja -C out\%%D libEGL libGLESv2
 )
