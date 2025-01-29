@@ -1,0 +1,29 @@
+From 97404a0a188fc41af08871eaf6f22b1d73e03883 Mon Sep 17 00:00:00 2001
+From: Artem Muralev <a.muralev@rogii.com>
+Date: Fri, 13 Dec 2024 11:40:47 +0400
+Subject: [PATCH 2/2] 
+ 0015-ANGLE-Invalidate-client-window-area-when-resizing-sw.patch
+
+---
+ src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp b/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp
+index c0ed26a7ab..bd0d13f418 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp
+@@ -535,6 +535,11 @@ EGLint SwapChain11::resize(DisplayD3D *displayD3D, EGLint backbufferWidth, EGLin
+     ASSERT(SUCCEEDED(hr));
+     if (SUCCEEDED(hr))
+     {
++#ifndef ANGLE_ENABLE_WINDOWS_STORE
++        ASSERT(nullptr != mNativeWindow);
++        if (mNativeWindow->getNativeWindow())
++            InvalidateRect(mNativeWindow->getNativeWindow(), nullptr, FALSE);
++#endif
+         const auto &format =
+             d3d11::Format::Get(mOffscreenRenderTargetFormat, mRenderer->getRenderer11DeviceCaps());
+         mBackBufferTexture.set(backbufferTexture, format);
+-- 
+2.47.0.windows.1
+

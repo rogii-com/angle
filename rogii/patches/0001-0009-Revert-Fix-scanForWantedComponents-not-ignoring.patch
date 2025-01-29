@@ -1,0 +1,57 @@
+From e340296565e8594916a3bc0f5140a483f101be2c Mon Sep 17 00:00:00 2001
+From: Artem Muralev <a.muralev@rogii.com>
+Date: Fri, 13 Dec 2024 11:36:01 +0400
+Subject: [PATCH 1/2] 
+ 0009-Revert-Fix-scanForWantedComponents-not-ignoring-attr.patch
+
+---
+ src/libANGLE/Config.cpp | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/src/libANGLE/Config.cpp b/src/libANGLE/Config.cpp
+index 743f03215b..00daf8dd9c 100644
+--- a/src/libANGLE/Config.cpp
++++ b/src/libANGLE/Config.cpp
+@@ -183,22 +183,27 @@ class ConfigSorter
+     }
+ 
+   private:
+-    static bool wantsComponent(const AttributeMap &attributeMap, EGLAttrib component)
++    void scanForWantedComponents(const AttributeMap &attributeMap)
+     {
+         // [EGL 1.5] section 3.4.1.2 page 30
+         // Sorting rule #3: by larger total number of color bits, not considering
+         // components that are 0 or don't-care.
+-        EGLAttrib value = attributeMap.get(component, 0);
+-        return value != 0 && value != EGL_DONT_CARE;
+-    }
+-
+-    void scanForWantedComponents(const AttributeMap &attributeMap)
+-    {
+-        mWantRed       = wantsComponent(attributeMap, EGL_RED_SIZE);
+-        mWantGreen     = wantsComponent(attributeMap, EGL_GREEN_SIZE);
+-        mWantBlue      = wantsComponent(attributeMap, EGL_BLUE_SIZE);
+-        mWantAlpha     = wantsComponent(attributeMap, EGL_ALPHA_SIZE);
+-        mWantLuminance = wantsComponent(attributeMap, EGL_LUMINANCE_SIZE);
++        for (auto attribIter = attributeMap.begin(); attribIter != attributeMap.end(); attribIter++)
++        {
++            EGLAttrib attributeKey   = attribIter->first;
++            EGLAttrib attributeValue = attribIter->second;
++            if (attributeKey != 0 && attributeValue != EGL_DONT_CARE)
++            {
++                switch (attributeKey)
++                {
++                    case EGL_RED_SIZE:       mWantRed = true; break;
++                    case EGL_GREEN_SIZE:     mWantGreen = true; break;
++                    case EGL_BLUE_SIZE:      mWantBlue = true; break;
++                    case EGL_ALPHA_SIZE:     mWantAlpha = true; break;
++                    case EGL_LUMINANCE_SIZE: mWantLuminance = true; break;
++                }
++            }
++        }
+     }
+ 
+     EGLint wantedComponentsSize(const Config &config) const
+-- 
+2.47.0.windows.1
+
