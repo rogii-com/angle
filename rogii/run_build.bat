@@ -13,8 +13,8 @@ set win_sdk_version=!VSCMD_ARG_winsdk!
 
 
 
-@REM python.exe scripts\bootstrap.py 
-@REM gclient sync -f -D -R
+python.exe scripts\bootstrap.py 
+gclient sync -f -D -R
 
 for /f "delims=|" %%f in ('dir /b rogii\patches') do call git apply %cd%\rogii\patches\%%f
 
