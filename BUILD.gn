@@ -1443,6 +1443,9 @@ template("angle_libGLESv2") {
       sources += [ "src/libGLESv2/libGLESv2.rc" ]
       deps += [ ":angle_version" ]
     }
+    if(is_debug){
+      output_name+="d"
+    }
   }
 }
 
@@ -1587,6 +1590,9 @@ libEGL_shared_template("libEGL") {
   sources = []
   if (is_win) {
     sources += [ "src/libEGL/libEGL_autogen.def" ]
+  }
+  if(is_debug){
+      output_name+="d"
   }
 }
 

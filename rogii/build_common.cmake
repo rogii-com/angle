@@ -86,23 +86,30 @@ if(WIN32)
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}")
 endif()
-return()
+
 list(APPEND BUILDTYPES release debug)
 foreach(build IN LISTS BUILDTYPES )
-    file(GLOB SKIA_FILES "${CMAKE_SOURCE_DIR}/out/${build}/*skia*")
+    file(GLOB EGL_FILES "${CMAKE_SOURCE_DIR}/out/${build}/*EGL*")
+    file(GLOB GLES_FILES "${CMAKE_SOURCE_DIR}/out/${build}/*GLES*")
+    file(GLOB THIRD_PARTY_FILES "${CMAKE_SOURCE_DIR}/out/${build}/*third_party*")
 
-    file(COPY ${SKIA_FILES} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${build}/" FILES_MATCHING PATTERN "*.dll" PATTERN "*.pdb")
-    file(COPY ${SKIA_FILES} DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/${build}/" FILES_MATCHING PATTERN "*.lib" PATTERN "*.so")
-
+    file(COPY ${EGL_FILES} 
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${build}/" FILES_MATCHING PATTERN "*.dll" PATTERN "*.pdb" PATTERN "*.lib")
+    file(COPY ${GLES_FILES} 
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${build}/" FILES_MATCHING PATTERN "*.dll" PATTERN "*.pdb" PATTERN "*.lib")
+    file(COPY ${THIRD_PARTY_FILES} 
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${build}/" FILES_MATCHING PATTERN "*.dll" PATTERN "*.pdb" PATTERN "*.lib")
 endforeach()  
 
-
-file(
-    COPY
-        "${CMAKE_SOURCE_DIR}/include"
-    DESTINATION
-        "${CMAKE_INSTALL_PREFIX}"
-)
+list(APPEND COPY_INC_FILES KHR EGL GLES2 GLES3)
+foreach(SRC_FILE IN LISTS COPY_INC_FILES)
+    file(
+        COPY
+            "${CMAKE_SOURCE_DIR}/include/${SRC_FILE}"
+        DESTINATION
+            "${CMAKE_INSTALL_PREFIX}/include/"
+    )
+endforeach()
 
 file(
     COPY

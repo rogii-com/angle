@@ -1,8 +1,9 @@
 SETLOCAL EnableDelayedExpansion
 
-git clone --depth=1 --no-tags --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git
+if not exist depot_tools (
+  call git clone --depth=1 --no-tags --single-branch https://chromium.googlesource.com/chromium/tools/depot_tools.git || exit /b 1
+)
 set PATH=%CD%\depot_tools;%PATH%
-
 
 set DEPOT_TOOLS_WIN_TOOLCHAIN=0
 
@@ -11,16 +12,19 @@ set win_toolchain_version=!VSCMD_ARG_VCVARS_VER!
 set win_sdk=!WindowsSdkDir:\=\\!
 set win_sdk_version=!VSCMD_ARG_winsdk!
 
+set vs2022_install=!VSINSTALLDIR:\=\\!
 
 
-python.exe scripts\bootstrap.py 
-gclient sync -f -D -R
-
-for /f "delims=|" %%f in ('dir /b rogii\patches') do call git apply %cd%\rogii\patches\%%f
+if not exist .gclient (
+    python.exe scripts\bootstrap.py 
+    call gclient sync -f -D -R
+    for /f "delims=|" %%f in ('dir /b rogii\patches') do call git apply %cd%\rogii\patches\%%f
+)
 
 if exist out (
     rmdir /Q /S out
 )
+
 FOR  %%D IN (release debug) DO (
     ECHO Build %%D
 
@@ -53,25 +57,19 @@ FOR  %%D IN (release debug) DO (
     ECHO is_java_debug=false
     ECHO jsoncpp_no_deprecated_declarations=false
     ECHO use_custom_libcxx_for_host=false
-    ECHO win_vc = "%win_vc%"
-    ECHO win_toolchain_version =  "%win_toolchain_version%"
-    ECHO win_sdk = "%win_sdk%"
-    ECHO win_sdk_version = "%win_sdk_version%"
     ) > out\%%D\args.gn
 
     IF "%%D" == "debug" (
         (
         ECHO is_debug=true
         ECHO angle_debug_layers_enabled=true
-        ECHO extra_cflags=["/MDd"]
         ) >> out\%%D\args.gn
     ) ELSE (
         (
         ECHO is_debug=false
-        ECHO extra_cflags=["/MD"]
         ) >> out\%%D\args.gn
     )
 
-    gn gen out\%%D
-    ninja -C out\%%D libEGL libGLESv2
+    call gn gen out\%%D
+    call ninja -C out\%%D libEGL libGLESv2
 )

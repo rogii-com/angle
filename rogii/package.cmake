@@ -10,11 +10,11 @@ set_target_properties(
         IMPORTED_LOCATION
             "${CMAKE_CURRENT_LIST_DIR}/bin/release/libGLESv2.dll"
         IMPORTED_LOCATION_DEBUG
-            "${CMAKE_CURRENT_LIST_DIR}/bin/debug/libGLESv2.dll"
+            "${CMAKE_CURRENT_LIST_DIR}/bin/debug/libGLESv2d.dll"
         IMPORTED_IMPLIB
             "${CMAKE_CURRENT_LIST_DIR}/bin/release/libGLESv2.dll.lib"
         IMPORTED_IMPLIB_DEBUG
-            "${CMAKE_CURRENT_LIST_DIR}/bin/debub/libGLESv2.dll.lib"
+            "${CMAKE_CURRENT_LIST_DIR}/bin/debug/libGLESv2d.dll.lib"
         INTERFACE_INCLUDE_DIRECTORIES
             "${CMAKE_CURRENT_LIST_DIR}/include"
 )
@@ -66,11 +66,11 @@ set_target_properties(
         IMPORTED_LOCATION
             "${CMAKE_CURRENT_LIST_DIR}/bin/release/libEGL.dll"
         IMPORTED_LOCATION_DEBUG
-            "${CMAKE_CURRENT_LIST_DIR}/bin/debug/libEGL.dll"
+            "${CMAKE_CURRENT_LIST_DIR}/bin/debug/libEGLd.dll"
         IMPORTED_IMPLIB
             "${CMAKE_CURRENT_LIST_DIR}/bin/release/libEGL.dll.lib"
         IMPORTED_IMPLIB_DEBUG
-            "${CMAKE_CURRENT_LIST_DIR}/bin/debub/libEGL.dll.lib"
+            "${CMAKE_CURRENT_LIST_DIR}/bin/debug/libEGLd.dll.lib"
         INTERFACE_INCLUDE_DIRECTORIES
             "${CMAKE_CURRENT_LIST_DIR}/include"
 )
