@@ -5,7 +5,7 @@ set(
 
 set(
     MSVS_VCTOOLS_VERSION
-    2022.14.42.34433
+    14.42.34433
 )
 
 set(
