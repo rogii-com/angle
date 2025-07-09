@@ -1,0 +1,37 @@
+diff --git a/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp b/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp
+index c0ed26a7ab..0a25c4b7c1 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp
+@@ -842,15 +842,15 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(DisplayD3D *displayD3D,
+         static_cast<d3d11::PositionTexCoordVertex *>(mappedResource.pData);
+ 
+     // Create a quad in homogeneous coordinates
+-    float x1 = (x / float(mWidth)) * 2.0f - 1.0f;
+-    float y1 = (y / float(mHeight)) * 2.0f - 1.0f;
+-    float x2 = ((x + width) / float(mWidth)) * 2.0f - 1.0f;
+-    float y2 = ((y + height) / float(mHeight)) * 2.0f - 1.0f;
++    float x1 = (x / float(width)) * 2.0f - 1.0f;
++    float y1 = (y / float(height)) * 2.0f - 1.0f;
++    float x2 = ((x + width) / float(width)) * 2.0f - 1.0f;
++    float y2 = ((y + height) / float(height)) * 2.0f - 1.0f;
+ 
+-    float u1 = x / float(mWidth);
+-    float v1 = y / float(mHeight);
+-    float u2 = (x + width) / float(mWidth);
+-    float v2 = (y + height) / float(mHeight);
++    float u1 = x / float(width);
++    float v1 = y / float(height);
++    float u2 = (x + width) / float(width);
++    float v2 = (y + height) / float(height);
+ 
+     // Invert the quad vertices depending on the surface orientation.
+     if ((mOrientation & EGL_SURFACE_ORIENTATION_INVERT_X_ANGLE) != 0)
+@@ -888,7 +888,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(DisplayD3D *displayD3D,
+     stateManager->setRenderTarget(mBackBufferRTView.get(), nullptr);
+ 
+     // Set the viewport
+-    stateManager->setSimpleViewport(mWidth, mHeight);
++    stateManager->setSimpleViewport(width, height);
+ 
+     // Apply textures
+     stateManager->setSimplePixelTextureAndSampler(mOffscreenSRView, mPassThroughSampler);
