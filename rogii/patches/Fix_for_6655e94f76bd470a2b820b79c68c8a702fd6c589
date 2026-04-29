@@ -1,0 +1,26 @@
+diff --git a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp
+index 3795eb440..6cc6017e2 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp
++++ b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp
+@@ -66,7 +66,8 @@ struct PackedAttribute
+ 
+ }  // anonymous namespace
+ 
+-PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), attributeData({}) {}
++PackedAttributeLayout::PackedAttributeLayout()
++    : numAttributes(0), unusedPadding(0), attributeData({}) {}
+ 
+ PackedAttributeLayout::PackedAttributeLayout(const PackedAttributeLayout &other) = default;
+ 
+diff --git a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h
+index 1a7f15e90..ffb435cc9 100644
+--- a/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h
++++ b/src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.h
+@@ -40,6 +40,7 @@ struct PackedAttributeLayout
+     bool operator==(const PackedAttributeLayout &other) const;
+ 
+     uint32_t numAttributes;
++    uint32_t unusedPadding;
+     gl::AttribArray<uint64_t> attributeData;
+ };
+ }  // namespace rx
